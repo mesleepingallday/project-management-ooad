@@ -75,6 +75,7 @@
                 :key="index"
               >
                 <Tag
+                  @click="displayStatus($event, item)"
                   :value="item?.status"
                   :severity="getSeverity(item?.status)"
                 />
@@ -100,6 +101,26 @@
             </template>
           </Column>
         </DataTable>
+
+        <!--Switch Status Popover-->
+        <Popover ref="op">
+          <div class="flex flex-col gap-4">
+            <div>
+              <ul class="list-none p-0 m-0 flex flex-col">
+                <li
+                  v-for="status in statuses"
+                  :key="status.name"
+                  class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border"
+                  @click="selectStatus(item, status.value)"
+                >
+                  <div>
+                    <span class="font-medium">{{ status.name }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </Popover>
       </template>
     </Card>
     <!--Create new Group Modal-->
@@ -234,10 +255,42 @@
 definePageMeta({
   layout: "content",
 });
+import { ref } from "vue";
+const op = ref();
+const toggle = (event) => {
+  op.value.toggle(event);
+};
+const selectedTask = ref("");
+const displayStatus = (event, task) => {
+  op.value.toggle(event);
+  selectedTask.value = task;
+};
+const selectStatus = async (task, status) => {
+  const { taskId, title, description, priority } = selectedTask.value;
+  try {
+    await updateTask(taskId, status, title, description, priority);
+    toast.add({
+      severity: "success",
+      summary: "Status Updated",
+      detail: "Task status has been updated successfully",
+      life: 3000,
+    });
+    await fetchGroupsData();
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Failed to update task status",
+      life: 3000,
+    });
+  } finally {
+    op.value.hide();
+  }
+};
+
 const memberStore = useMemberStore();
 const groups = ref();
 const selectedGroup = ref({});
-const selectedStatus = ref();
 const selectedPriority = ref();
 const statuses = ref([
   { name: "Backlog", value: "Backlog" },
