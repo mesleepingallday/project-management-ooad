@@ -90,6 +90,13 @@
                 class="cursor-pointer"
               >
               </Icon>
+              <Icon
+                name="tdesign:task-add-filled"
+                @click="handleSelectGroupTask(slotProps.data)"
+                size="1.5em"
+                class="cursor-pointer ml-2"
+              >
+              </Icon>
             </template>
           </Column>
         </DataTable>
@@ -157,6 +164,39 @@
         </div>
       </Form>
     </Dialog>
+
+    <!--Add Member to Group Modal-->
+    <Dialog
+      v-model:visible="visibleAddModalT"
+      modal
+      header="Add Task To Group"
+      class="w-96"
+    >
+      <Form @submit="handleAddTask" class="flex flex-col gap-4 w-full">
+        <div class="flex flex-col gap-1">
+          <label for="taskTitle" class="font-semibold w-24">Tasks</label>
+          <MultiSelect
+            id="taskTitle"
+            v-model="selectedTasks"
+            :options="dataStore.data"
+            optionLabel="title"
+            filter
+            placeholder="Select Tasks"
+            class="w-full md:w-80"
+          />
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <Button
+            type="button"
+            label="Cancel"
+            severity="secondary"
+            @click="visibleAddModalT = false"
+          ></Button>
+          <Button type="submit" label="Add Tasks"></Button>
+        </div>
+      </Form>
+    </Dialog>
   </div>
 </template>
 
@@ -177,6 +217,16 @@ await fetchMemberList();
 const handleSelectGroupMember = (group) => {
   selectedGroup.value = group;
   visibleAddModal.value = true;
+};
+const fetchTaskList = async () => {
+  const memberStore = useMemberStore();
+  await memberStore.fetchAllTasks();
+  dataStore.data = memberStore.allTasks;
+};
+await fetchTaskList();
+const handleSelectGroupTask = (group) => {
+  selectedGroup.value = group;
+  visibleAddModalT.value = true;
 };
 const handleAddMember = async () => {
   try {
@@ -204,6 +254,32 @@ const handleAddMember = async () => {
     visibleAddModal.value = false;
   }
 };
+const handleAddTask = async () => {
+  try {
+    const { groupId } = selectedGroup.value;
+    if (selectedTasks.value.length > 0) {
+      selectedTasks.value.forEach(async (item) => {
+        await addTaskToGroup(groupId, item);
+      });
+    }
+    toast.add({
+      severity: "success",
+      summary: "Tasks Added",
+      detail: "Tasks has been added successfully",
+      life: 3000,
+    });
+    await fetchGroupsData();
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Failed to add tasks",
+      life: 3000,
+    });
+  } finally {
+    visibleAddModal.value = false;
+  }
+};
 
 const fetchGroupsData = async () => {
   await memberStore.fetchGroups();
@@ -214,7 +290,9 @@ await fetchGroupsData();
 const toast = useToast();
 const visibleCreateModal = ref(false);
 const visibleAddModal = ref(false);
+const visibleAddModalT = ref(false);
 const selectedMembers = ref([]);
+const selectedTasks = ref([]);
 
 const formData = reactive({
   groupName: "",

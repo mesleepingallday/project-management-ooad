@@ -87,6 +87,23 @@ export const addMemberToGroup = async (groupId: string, userId: string) => {
   return data;
 };
 
+export const addTaskToGroup = async (groupId: string, task: any) => {
+  const { title, description, status, priority } = task;
+  const data = await useFetch(`/api/groups/assigntask`, {
+    query: { groupId },
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${btoa(`${authUsername}:${authPassword}`)}`,
+    },
+    body: { title, description, status, priority },
+  });
+  if (data.error.value) {
+    throw new Error("Failed to add member to group");
+  }
+  return data;
+};
+
 export const updateTask = async (
   taskId: string,
   status: string,
