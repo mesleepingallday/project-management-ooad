@@ -70,6 +70,23 @@ export const addUser = async ({
   return data;
 };
 
+export const addMemberToGroup = async (groupId: string, userId: string) => {
+  const user = { userId: userId };
+  const data = await useFetch(`/api/groups/assign`, {
+    query: { groupId },
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${btoa(`${authUsername}:${authPassword}`)}`,
+    },
+    body: user,
+  });
+  if (data.error.value) {
+    throw new Error("Failed to add member to group");
+  }
+  return data;
+};
+
 export const updateTask = async (
   taskId: string,
   status: string,

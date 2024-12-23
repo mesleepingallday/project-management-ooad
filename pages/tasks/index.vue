@@ -8,7 +8,6 @@ onMounted(async () => {
   memberStore.setManager(isManager);
 });
 const status = ["Backlog", "Pending", "In Progress", "Completed"];
-const isManager = memberStore.isManager;
 const taskCategories = [
   { name: "All", value: "all" },
   { name: "Personal", value: "personal" },

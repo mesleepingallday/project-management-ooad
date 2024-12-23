@@ -4,10 +4,9 @@ definePageMeta({
 });
 import { useToast } from "primevue/usetoast";
 const memberStore = useMemberStore();
-onMounted(async () => {
-  const isManager = await checkManager();
-  memberStore.setManager(isManager);
-});
+const isManager = await checkManager();
+const visibleManager = ref(isManager);
+
 const toast = useToast();
 const route = useRouter();
 

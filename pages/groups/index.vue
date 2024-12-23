@@ -81,10 +81,21 @@
               </div>
             </template>
           </Column>
+          <Column class="w-24 !text-end">
+            <template #body="slotProps">
+              <Icon
+                name="gridicons:user-add"
+                @click="handleSelectGroupMember(slotProps.data)"
+                size="1.5em"
+                class="cursor-pointer"
+              >
+              </Icon>
+            </template>
+          </Column>
         </DataTable>
       </template>
     </Card>
-    <!--Create new User Modal-->
+    <!--Create new Group Modal-->
     <Dialog
       v-model:visible="visibleCreateModal"
       modal
@@ -113,6 +124,39 @@
         </div>
       </Form>
     </Dialog>
+
+    <!--Add Member to Group Modal-->
+    <Dialog
+      v-model:visible="visibleAddModal"
+      modal
+      header="Add New Group"
+      class="w-96"
+    >
+      <Form @submit="handleAddMember" class="flex flex-col gap-4 w-full">
+        <div class="flex flex-col gap-1">
+          <label for="memberName" class="font-semibold w-24">Member</label>
+          <MultiSelect
+            id="memberName"
+            v-model="selectedMembers"
+            :options="dataStore.user"
+            optionLabel="fullName"
+            filter
+            placeholder="Select Members"
+            class="w-full md:w-80"
+          />
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <Button
+            type="button"
+            label="Cancel"
+            severity="secondary"
+            @click="visibleAddModal = false"
+          ></Button>
+          <Button type="submit" label="Add Member"></Button>
+        </div>
+      </Form>
+    </Dialog>
   </div>
 </template>
 
@@ -122,6 +166,45 @@ definePageMeta({
 });
 const memberStore = useMemberStore();
 const groups = ref();
+const selectedGroup = ref({});
+const dataStore = useDataStore();
+const fetchMemberList = async () => {
+  const memberStore = useMemberStore();
+  await memberStore.fetchUsers();
+  dataStore.user = memberStore.users;
+};
+await fetchMemberList();
+const handleSelectGroupMember = (group) => {
+  selectedGroup.value = group;
+  visibleAddModal.value = true;
+};
+const handleAddMember = async () => {
+  try {
+    const { groupId } = selectedGroup.value;
+    if (selectedMembers.value.length > 0) {
+      selectedMembers.value.forEach(async (item) => {
+        await addMemberToGroup(groupId, item.userId);
+      });
+    }
+    toast.add({
+      severity: "success",
+      summary: "Members Added",
+      detail: "Members has been added successfully",
+      life: 3000,
+    });
+    await fetchGroupsData();
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Failed to add member",
+      life: 3000,
+    });
+  } finally {
+    visibleAddModal.value = false;
+  }
+};
+
 const fetchGroupsData = async () => {
   await memberStore.fetchGroups();
   groups.value = memberStore?.groups;
@@ -130,6 +213,9 @@ await fetchGroupsData();
 
 const toast = useToast();
 const visibleCreateModal = ref(false);
+const visibleAddModal = ref(false);
+const selectedMembers = ref([]);
+
 const formData = reactive({
   groupName: "",
 });

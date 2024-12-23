@@ -109,12 +109,12 @@ const modalHandler = () => {
         class="w-14 p-1 rounded-md text-xs bg-[#edf0f7] text-black hover:bg-[#2d2d2d] hover:text-white"
       >
       </SharedButton>
-      <Button
-        label="Edit"
+      <SharedButton
+        text="Edit"
         @click="visibleTaskEditModal = true"
         class="w-14 p-1 rounded-md text-xs bg-[#edf0f7] text-black hover:bg-[#2d2d2d] hover:text-white"
       >
-      </Button>
+      </SharedButton>
     </div>
     <TaskDone v-if="props.statu === 'Completed'"> </TaskDone>
 

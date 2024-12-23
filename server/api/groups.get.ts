@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   const authorization = getHeader(event, "Authorization");
-  const data = await $fetch("http://localhost:8080/groups", {
+  const data = await $fetch("http://localhost:8080/groups/my-groups", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
