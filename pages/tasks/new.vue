@@ -3,9 +3,14 @@ definePageMeta({
   layout: "content",
 });
 import { useToast } from "primevue/usetoast";
+const memberStore = useMemberStore();
+onMounted(async () => {
+  const isManager = await checkManager();
+  memberStore.setManager(isManager);
+});
 const toast = useToast();
 const route = useRouter();
-const isManager = await checkManager();
+
 const dataStore = useDataStore();
 const fetchMemberList = async () => {
   const memberStore = useMemberStore();
@@ -111,7 +116,10 @@ const handleAddTask = async () => {
           <option value="Low">Low</option>
         </select>
       </div>
-      <div class="w-[90%] lg:w-2/3 flex flex-col mt-2" v-if="isManager">
+      <div
+        class="w-[90%] lg:w-2/3 flex flex-col mt-2"
+        v-if="memberStore.isManager"
+      >
         <label for="member" class="text-sm font-medium text-gray-400"
           >Member</label
         >

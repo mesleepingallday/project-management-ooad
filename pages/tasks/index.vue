@@ -2,9 +2,13 @@
 definePageMeta({
   layout: "content",
 });
-
+const memberStore = useMemberStore();
+onMounted(async () => {
+  const isManager = await checkManager();
+  memberStore.setManager(isManager);
+});
 const status = ["Backlog", "Pending", "In Progress", "Completed"];
-const isManager = await checkManager();
+const isManager = memberStore.isManager;
 const taskCategories = [
   { name: "All", value: "all" },
   { name: "Personal", value: "personal" },
@@ -12,7 +16,6 @@ const taskCategories = [
 const selectedCategory = ref("personal");
 const isDragItem = ref(false);
 const dataStore = useDataStore();
-const memberStore = useMemberStore();
 const fetchTasks = async (e) => {
   if (e) {
     selectedCategory.value = e.value || "personal";
@@ -35,7 +38,7 @@ fetchTasks();
     <Toast />
     <div class="card flex justify-center">
       <Select
-        v-if="isManager"
+        v-if="memberStore.isManager"
         v-model="selectedCategory"
         :options="taskCategories"
         optionLabel="name"

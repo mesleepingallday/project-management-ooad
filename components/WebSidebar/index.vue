@@ -1,26 +1,15 @@
 <script setup>
-const dataStore = useDataStore();
 const authStore = useAuthStore();
 
 const outHandler = () => {
   authStore.clearCredentials();
   navigateTo("/login");
 };
-
-const isManager = () => {
-  const toast = useToast();
-  const config = useRuntimeConfig();
-  if (userID == config.ADMIN_UUID) return true;
-  else {
-    toast.add({
-      severity: "error",
-      summary: "Access Denied",
-      detail: "Please login as a manager to access",
-      life: 3000,
-    });
-    return false;
-  }
-};
+const memberStore = useMemberStore();
+onMounted(async () => {
+  const isManager = await checkManager();
+  memberStore.setManager(isManager);
+});
 
 const isItemActive = (id) => {
   sidebarItems?.value?.forEach((item) => {
@@ -53,8 +42,15 @@ const sidebarItems = ref([
   },
   {
     name: "Users",
-    icon: "gridicons:multiple-users",
+    icon: "material-symbols:person",
     link: "/users",
+    isActive: false,
+    id: 7,
+  },
+  {
+    name: "Groups",
+    icon: "material-symbols:groups",
+    link: "/groups",
     isActive: false,
     id: 4,
   },

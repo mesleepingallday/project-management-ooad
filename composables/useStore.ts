@@ -26,6 +26,22 @@ export const addTask = async (
   return data;
 };
 
+export const addGroup = async (groupName: string) => {
+  const newGroup = { groupName };
+  const data = await useFetch(`/api/groups`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${btoa(`${authUsername}:${authPassword}`)}`,
+    },
+    body: newGroup,
+  });
+  if (data.error.value) {
+    throw new Error("Failed to create new task");
+  }
+  return data;
+};
+
 export const addUser = async ({
   username,
   fullName,

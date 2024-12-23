@@ -8,8 +8,13 @@ export const useMemberStore = defineStore({
     personalTasks: [],
     allTasks: [],
     users: [],
+    groups: [],
+    isManager: false,
   }),
   actions: {
+    setManager(isManager: boolean) {
+      this.isManager = isManager;
+    },
     async fetchPersonalTasks() {
       this.isLoading = true;
       this.error = null;
@@ -90,6 +95,34 @@ export const useMemberStore = defineStore({
           },
         });
         this.users = data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async fetchGroups() {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const encodedUsername = localStorage.getItem("username");
+        const encodedPassword = localStorage.getItem("password");
+        if (!encodedUsername || !encodedPassword) {
+          throw new Error("Username or password not found in localStorage");
+        }
+
+        // Decode the Base64 encoded username and password
+        const username = atob(encodedUsername);
+        const password = atob(encodedPassword);
+
+        const { data } = await useFetch("/api/groups", {
+          method: "GET",
+          headers: {
+            Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+          },
+        });
+        this.groups = data;
       } catch (error) {
         console.log(error);
       } finally {
