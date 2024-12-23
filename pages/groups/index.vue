@@ -165,7 +165,7 @@
       </Form>
     </Dialog>
 
-    <!--Add Member to Group Modal-->
+    <!--Add Task to Group Modal-->
     <Dialog
       v-model:visible="visibleAddModalT"
       modal
@@ -174,15 +174,45 @@
     >
       <Form @submit="handleAddTask" class="flex flex-col gap-4 w-full">
         <div class="flex flex-col gap-1">
-          <label for="taskTitle" class="font-semibold w-24">Tasks</label>
-          <MultiSelect
-            id="taskTitle"
-            v-model="selectedTasks"
-            :options="dataStore.data"
-            optionLabel="title"
-            filter
-            placeholder="Select Tasks"
-            class="w-full md:w-80"
+          <label for="title" class="font-semibold w-24">Title</label>
+          <InputText
+            id="title"
+            v-model="formTaskData.title"
+            class="flex-auto"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="description" class="font-semibold w-24"
+            >Description</label
+          >
+          <InputText
+            id="description"
+            v-model="formTaskData.description"
+            class="flex-auto"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="status" class="font-semibold w-24">Status</label>
+          <Select
+            v-model="formTaskData.status"
+            :options="statuses"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Select task status"
+            class="w-full md:w-56"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="priority" class="font-semibold w-24">Priority</label>
+          <Select
+            v-model="formTaskData.priority"
+            :options="priorities"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Select task priority"
+            class="w-full md:w-56"
           />
         </div>
 
@@ -207,6 +237,26 @@ definePageMeta({
 const memberStore = useMemberStore();
 const groups = ref();
 const selectedGroup = ref({});
+const selectedStatus = ref();
+const selectedPriority = ref();
+const statuses = ref([
+  { name: "Backlog", value: "Backlog" },
+  { name: "Pending", value: "Pending" },
+  { name: "In Progress", value: "In Progress" },
+  { name: "Completed", value: "Completed" },
+]);
+const priorities = ref([
+  { name: "High", value: "High" },
+  { name: "Medium", value: "Medium" },
+  { name: "Low", value: "Low" },
+]);
+const formTaskData = reactive({
+  title: "",
+  description: "",
+  status: "",
+  priority: "",
+});
+
 const dataStore = useDataStore();
 const fetchMemberList = async () => {
   const memberStore = useMemberStore();
@@ -257,11 +307,7 @@ const handleAddMember = async () => {
 const handleAddTask = async () => {
   try {
     const { groupId } = selectedGroup.value;
-    if (selectedTasks.value.length > 0) {
-      selectedTasks.value.forEach(async (item) => {
-        await addTaskToGroup(groupId, item);
-      });
-    }
+    await addTaskToGroup(groupId, formTaskData);
     toast.add({
       severity: "success",
       summary: "Tasks Added",
@@ -277,7 +323,7 @@ const handleAddTask = async () => {
       life: 3000,
     });
   } finally {
-    visibleAddModal.value = false;
+    visibleAddModalT.value = false;
   }
 };
 
@@ -292,7 +338,6 @@ const visibleCreateModal = ref(false);
 const visibleAddModal = ref(false);
 const visibleAddModalT = ref(false);
 const selectedMembers = ref([]);
-const selectedTasks = ref([]);
 
 const formData = reactive({
   groupName: "",
@@ -325,13 +370,13 @@ const getSeverity = (status) => {
       return "danger";
 
     case "Pending":
-      return "success";
+      return "warn";
 
     case "In Progress":
-      return "info";
+      return "secondary";
 
     case "Completed":
-      return "warn";
+      return "success";
 
     default:
       return null;
