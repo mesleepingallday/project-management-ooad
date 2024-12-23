@@ -1,7 +1,7 @@
 <template>
   <div>
     <Toast />
-    <Card class="my-app-dark">
+    <Card>
       <template #header>
         <div class="flex justify-end mt-5 mr-5">
           <Button @click="visibleCreateModal = true">New Groups</Button>
@@ -10,15 +10,75 @@
       <template #content>
         <DataTable
           :value="groups"
-          dataKey="groupId"
-          paginator
-          sortField="groupId"
+          rowGroupMode="rowspan"
+          groupRowsBy="groupName"
           :sortOrder="-1"
-          rows="9"
+          sortField="groupId"
+          paginator
+          :rows="4"
+          tableStyle="custom-container"
         >
-          <Column field="groupName" header="Group Name" style="width: 20%">
-            <template #editor="{ data, field }">
-              <InputText v-model="data[field]" fluid />
+          <Column header="#" headerStyle="width:3rem">
+            <template #body="slotProps">
+              {{ slotProps.index + 1 }}
+            </template>
+          </Column>
+          <Column
+            field="groupName"
+            header="Group Name"
+            style="min-width: 150px"
+          >
+            <template #body="slotProps">
+              <div class="flex items-center gap-2">
+                <span>{{ slotProps.data.groupName }}</span>
+              </div>
+            </template>
+          </Column>
+          <Column header="Members" style="min-width: 200px">
+            <template #body="slotProps">
+              <div
+                v-for="(member, index) in slotProps.data.members"
+                :key="index"
+              >
+                <span>{{ member.fullName || "Unknown Member" }}</span>
+              </div>
+            </template>
+          </Column>
+          <Column header="Task title" style="min-width: 200px">
+            <template #body="slotProps">
+              <div
+                v-for="(item, index) in slotProps.data.groupTasks"
+                :key="index"
+              >
+                <span>{{ item?.title || "Unknown Member" }}</span>
+              </div>
+            </template>
+          </Column>
+          <Column
+            field="groupTasks"
+            header="Description"
+            style="min-width: 200px"
+          >
+            <template #body="slotProps">
+              <div
+                v-for="(item, index) in slotProps.data.groupTasks"
+                :key="index"
+              >
+                <span>{{ item?.description || "Unknown Tasks" }}</span>
+              </div>
+            </template>
+          </Column>
+          <Column header="Status" style="min-width: 100px">
+            <template #body="slotProps">
+              <div
+                v-for="(item, index) in slotProps.data.groupTasks"
+                :key="index"
+              >
+                <Tag
+                  :value="item?.status"
+                  :severity="getSeverity(item?.status)"
+                />
+              </div>
             </template>
           </Column>
         </DataTable>
@@ -95,4 +155,46 @@ const handleCreateGroup = async () => {
     visibleCreateModal.value = false;
   }
 };
+const getSeverity = (status) => {
+  switch (status) {
+    case "Backlog":
+      return "danger";
+
+    case "Pending":
+      return "success";
+
+    case "In Progress":
+      return "info";
+
+    case "Completed":
+      return "warn";
+
+    default:
+      return null;
+  }
+};
 </script>
+
+<style scoped>
+.custom-container {
+  width: 95%;
+  min-height: 90%;
+  max-height: 100%;
+  padding: 0.75rem;
+  overflow-y: auto;
+  position: fixed;
+  background-color: #212121;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .custom-container {
+    width: 60%;
+  }
+}
+</style>
