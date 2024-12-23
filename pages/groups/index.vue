@@ -108,7 +108,9 @@
             <div>
               <ul class="list-none p-0 m-0 flex flex-col">
                 <li
-                  v-for="status in statuses"
+                  v-for="status in statuses.filter(
+                    (s) => s.value !== selectedTask.status
+                  )"
                   :key="status.name"
                   class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border"
                   @click="selectStatus(item, status.value)"
@@ -260,7 +262,7 @@ const op = ref();
 const toggle = (event) => {
   op.value.toggle(event);
 };
-const selectedTask = ref("");
+const selectedTask = ref({});
 const displayStatus = (event, task) => {
   op.value.toggle(event);
   selectedTask.value = task;
