@@ -1,7 +1,7 @@
 <template>
   <div>
     <Toast />
-    <Card class="my-app-dark">
+    <Card class="h-full w-full ml-8">
       <template #header>
         <div class="flex justify-end mt-5 mr-5">
           <Button @click="visibleCreateModal = true">New Users</Button>
@@ -18,6 +18,9 @@
           sortField="userId"
           :sortOrder="-1"
           rows="9"
+          scrollable
+          scrollHeight="550px"
+          class="w-full"
         >
           <Column field="username" header="Username" style="width: 20%">
             <template #editor="{ data, field }">
