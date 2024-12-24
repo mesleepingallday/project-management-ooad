@@ -73,16 +73,14 @@ const sidebarItems = ref([
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center">
-    <div
-      class="w-14 h-full md:w-28 md:h-[90%] bg-[#212121] shadow-2xl md:rounded-xl"
-    >
+  <div class="h-full flex items-center justify-center">
+    <div class="w-14 md:w-28 bg-[#212121] shadow-2xl md:rounded-xl my-8">
       <div
         class="w-full h-20 font-bold text-white mr-5 flex flex-col justify-center items-center md:mt-10"
       >
-        <h1 class="text-3xl md:text-5xl text-[#5293ee]">P.</h1>
+        <h1 class="text-3xl md:text-5xl text-[#5293ee]">G3.</h1>
       </div>
-      <div class="w-full h-3/4 flex flex-col items-center text-white">
+      <div class="w-full flex flex-col items-center text-white">
         <WebSidebarItem
           v-for="item in sidebarItems"
           :sidebarItem="item"
@@ -94,5 +92,3 @@ const sidebarItems = ref([
     </div>
   </div>
 </template>
-
-<style scoped></style>
