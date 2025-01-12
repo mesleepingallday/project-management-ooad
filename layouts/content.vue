@@ -9,7 +9,7 @@
 
 <style scoped>
 .main {
-  @apply w-full lg:h-full  bg-[#121212] flex items-center justify-center overflow-y-auto;
+  @apply w-full lg:h-screen  bg-[#121212] flex items-center justify-center;
 }
 
 .main__content {

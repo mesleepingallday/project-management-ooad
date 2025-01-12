@@ -1,7 +1,7 @@
 <template>
   <div>
     <Toast />
-    <Card class="h-full w-full ml-8">
+    <Card>
       <template #header>
         <div class="flex justify-end mt-5 mr-5">
           <Button @click="visibleCreateModal = true">New Groups</Button>
@@ -18,7 +18,7 @@
           :rows="4"
           scrollable
           scrollHeight="800px"
-          class="w-full"
+          tableStyle="custom-container"
         >
           <Column header="#" headerStyle="width:3rem">
             <template #body="slotProps">
