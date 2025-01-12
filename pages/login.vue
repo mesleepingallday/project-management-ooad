@@ -89,6 +89,7 @@ import { z } from "zod";
 const authStore = useAuthStore();
 const memberStore = useMemberStore();
 const toast = useToast();
+const memberStore = useMemberStore();
 const initialValues = ref({
   username: "",
   password: "",
@@ -118,7 +119,6 @@ const onLogin = async (e: any) => {
         throw new Error(data.error.value);
       }
       const isManager = data.data.value.role === "manager";
-      console.log(isManager);
       memberStore.setManager(isManager);
       toast.add({
         severity: "success",
@@ -133,7 +133,7 @@ const onLogin = async (e: any) => {
         authStore.login(encodedUsername, encodedPassword);
 
         navigateTo("/", { external: true });
-      }, 2500);
+      }, 2000);
     } catch (error) {
       if (error.message.includes("500")) {
         toast.add({

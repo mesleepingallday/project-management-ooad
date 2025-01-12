@@ -4,7 +4,6 @@ definePageMeta({
 });
 const memberStore = useMemberStore();
 const isManager = memberStore.isManager;
-
 const status = ["Backlog", "Pending", "In Progress", "Completed"];
 const taskCategories = [
   { name: "All", value: "all" },
