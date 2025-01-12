@@ -100,6 +100,13 @@
                 class="cursor-pointer ml-2"
               >
               </Icon>
+              <Icon
+                name="material-symbols:person-remove"
+                @click="handleSelectGroupTask(slotProps.data)"
+                size="1.5em"
+                class="cursor-pointer ml-2"
+              >
+              </Icon>
             </template>
           </Column>
         </DataTable>
