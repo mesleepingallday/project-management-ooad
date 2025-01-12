@@ -3,7 +3,7 @@
     <Toast />
     <Card>
       <template #header>
-        <div class="flex justify-end mt-5 mr-5">
+        <div v-if="isManager" class="flex justify-end mt-5 mr-5">
           <Button @click="visibleCreateModal = true">New Groups</Button>
         </div>
       </template>
@@ -84,7 +84,7 @@
               </div>
             </template>
           </Column>
-          <Column class="w-24 !text-end">
+          <Column v-if="isManager" class="w-24 !text-end">
             <template #body="slotProps">
               <Icon
                 name="gridicons:user-add"
@@ -293,6 +293,7 @@ const selectStatus = async (task, status) => {
 };
 
 const memberStore = useMemberStore();
+const isManager = memberStore.isManager;
 const groups = ref();
 const selectedGroup = ref({});
 const selectedPriority = ref();

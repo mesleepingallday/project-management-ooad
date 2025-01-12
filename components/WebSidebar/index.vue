@@ -5,11 +5,6 @@ const outHandler = () => {
   authStore.clearCredentials();
   navigateTo("/login");
 };
-const memberStore = useMemberStore();
-onMounted(async () => {
-  const isManager = await checkManager();
-  memberStore.setManager(isManager);
-});
 
 const isItemActive = (id) => {
   sidebarItems?.value?.forEach((item) => {
@@ -41,13 +36,6 @@ const sidebarItems = ref([
     id: 3,
   },
   {
-    name: "Users",
-    icon: "material-symbols:person",
-    link: "/users",
-    isActive: false,
-    id: 7,
-  },
-  {
     name: "Groups",
     icon: "material-symbols:groups",
     link: "/groups",
@@ -56,7 +44,7 @@ const sidebarItems = ref([
   },
   {
     name: "Settings",
-    icon: "material-symbols:settings",
+    icon: "material-symbols:person",
     link: "/settings",
     isActive: false,
     id: 6,

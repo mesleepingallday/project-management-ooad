@@ -118,6 +118,7 @@ const onLogin = async (e: any) => {
         throw new Error(data.error.value);
       }
       const isManager = data.data.value.role === "manager";
+      console.log(isManager);
       memberStore.setManager(isManager);
       toast.add({
         severity: "success",
@@ -131,8 +132,8 @@ const onLogin = async (e: any) => {
         const encodedPassword = encodeBase64(password);
         authStore.login(encodedUsername, encodedPassword);
 
-        navigateTo("/", { external: true });
-      }, 2000);
+        navigateTo("/", { external: false });
+      }, 5000);
     } catch (error) {
       if (error.message.includes("500")) {
         toast.add({
