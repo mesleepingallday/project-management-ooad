@@ -89,21 +89,21 @@
               <Icon
                 name="gridicons:user-add"
                 @click="handleSelectGroupMember(slotProps.data)"
-                size="1.5em"
+                size="1em"
                 class="cursor-pointer"
               >
               </Icon>
               <Icon
                 name="tdesign:task-add-filled"
                 @click="handleSelectGroupTask(slotProps.data)"
-                size="1.5em"
+                size="1em"
                 class="cursor-pointer ml-2"
               >
               </Icon>
               <Icon
                 name="material-symbols:person-remove"
                 @click="handleSelectGroupTask(slotProps.data)"
-                size="1.5em"
+                size="1em"
                 class="cursor-pointer ml-2"
               >
               </Icon>
