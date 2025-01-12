@@ -89,7 +89,6 @@ import { z } from "zod";
 const authStore = useAuthStore();
 const memberStore = useMemberStore();
 const toast = useToast();
-const memberStore = useMemberStore();
 const initialValues = ref({
   username: "",
   password: "",
