@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useMemberStore = defineStore({
-  id: "memberStore",
+export const useMemberStore = defineStore("memberStore", {
   state: () => ({
     isLoading: false,
     error: null,

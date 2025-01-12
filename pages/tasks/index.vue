@@ -3,10 +3,8 @@ definePageMeta({
   layout: "content",
 });
 const memberStore = useMemberStore();
-onMounted(async () => {
-  const isManager = await checkManager();
-  memberStore.setManager(isManager);
-});
+const isManager = memberStore.isManager;
+
 const status = ["Backlog", "Pending", "In Progress", "Completed"];
 const taskCategories = [
   { name: "All", value: "all" },
@@ -31,13 +29,17 @@ const fetchTasks = async (e) => {
   isDragItem.value = !isDragItem.value;
 };
 fetchTasks();
+const loading = ref(false);
 </script>
 <template>
-  <div class="flex flex-col gap-8 w-full h-full overflow-y-hidden">
+  <div v-if="loading" class="card flex justify-center">
+    <ProgressSpinner />
+  </div>
+  <div v-else class="flex flex-col gap-8 w-full h-full overflow-y-hidden">
     <Toast />
     <div class="card flex justify-center">
       <Select
-        v-if="memberStore.isManager"
+        v-if="isManager"
         v-model="selectedCategory"
         :options="taskCategories"
         optionLabel="name"

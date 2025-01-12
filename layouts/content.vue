@@ -1,7 +1,3 @@
-<script setup>
-const dataStore = useDataStore();
-</script>
-
 <template>
   <div class="main">
     <WebSidebar />

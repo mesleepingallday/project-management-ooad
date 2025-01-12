@@ -87,8 +87,7 @@ definePageMeta({
 import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { z } from "zod";
 const authStore = useAuthStore();
-const dataStore = useDataStore();
-const rememberMe = ref(false);
+const memberStore = useMemberStore();
 const toast = useToast();
 const initialValues = ref({
   username: "",
@@ -118,6 +117,9 @@ const onLogin = async (e: any) => {
       if (data.error.value) {
         throw new Error(data.error.value);
       }
+      const isManager = data.data.value.role === "manager";
+      console.log(isManager);
+      memberStore.setManager(isManager);
       toast.add({
         severity: "success",
         summary: "Login successful",
@@ -130,8 +132,8 @@ const onLogin = async (e: any) => {
         const encodedPassword = encodeBase64(password);
         authStore.login(encodedUsername, encodedPassword);
 
-        navigateTo("/");
-      }, 2000);
+        navigateTo("/", { external: true });
+      }, 2500);
     } catch (error) {
       if (error.message.includes("500")) {
         toast.add({

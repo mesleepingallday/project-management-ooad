@@ -17,7 +17,7 @@
           paginator
           :rows="4"
           scrollable
-          scrollHeight="550px"
+          scrollHeight="800px"
           class="w-full"
         >
           <Column header="#" headerStyle="width:3rem">

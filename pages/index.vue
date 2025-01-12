@@ -54,7 +54,7 @@ const selectFilter = computed(() => {
       class="w-full h-full lg:h-[80%] flex-col lg:flex lg:flex-row justify-between"
     >
       <div
-        class="scroll-bar w-[90%] lg:w-[55%] lg:h-full mx-auto md:mt-5 md:ml-7 pl-3 flex flex-col text-white overflow-y-auto"
+        class="scroll-bar w-[90%] lg:w-[55%] lg:h-[350px] mx-auto md:mt-5 md:ml-7 pl-3 flex flex-col text-white overflow-y-auto"
       >
         <h1 class="text-2xl">Tasks</h1>
         <div class="w-full mt-2 text-start">

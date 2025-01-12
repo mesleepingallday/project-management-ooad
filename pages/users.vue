@@ -19,7 +19,7 @@
           :sortOrder="-1"
           rows="9"
           scrollable
-          scrollHeight="550px"
+          scrollHeight="800px"
           class="w-full"
         >
           <Column field="username" header="Username" style="width: 20%">
